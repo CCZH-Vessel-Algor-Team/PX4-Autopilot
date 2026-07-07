@@ -221,7 +221,7 @@ bool GZBridge::subscribePoseInfo(bool required)
 
 bool GZBridge::subscribeImu(bool required)
 {
-	std::string imu_topic = "/world/" + _world_name + "/model/" + _model_name + "/link/base_link/sensor/imu_sensor/imu";
+	std::string imu_topic =  "/usv_1/sensors/imu/imu_sensor/data";
 
 	if (!_node.Subscribe(imu_topic, &GZBridge::imuCallback, this)) {
 		PX4_ERR("failed to subscribe to %s", imu_topic.c_str());
@@ -233,8 +233,7 @@ bool GZBridge::subscribeImu(bool required)
 
 bool GZBridge::subscribeMag(bool required)
 {
-	std::string mag_topic = "/world/" + _world_name + "/model/" + _model_name +
-				"/link/base_link/sensor/magnetometer_sensor/magnetometer";
+	std::string mag_topic = "/usv_1/sensors/magnetometer/mag_sensor/data";
 
 	if (!_node.Subscribe(mag_topic, &GZBridge::magnetometerCallback, this)) {
 		PX4_ERR("failed to subscribe to %s", mag_topic.c_str());
@@ -297,8 +296,7 @@ bool GZBridge::subscribeAirspeed(bool required)
 
 bool GZBridge::subscribeAirPressure(bool required)
 {
-	std::string air_pressure_topic = "/world/" + _world_name + "/model/" + _model_name +
-					 "/link/base_link/sensor/air_pressure_sensor/air_pressure";
+	std::string air_pressure_topic = "/usv_1/sensors/barometer/baro_sensor/fluid_pressure";
 
 	if (!_node.Subscribe(air_pressure_topic, &GZBridge::airPressureCallback, this)) {
 		PX4_ERR("failed to subscribe to %s", air_pressure_topic.c_str());
@@ -310,8 +308,7 @@ bool GZBridge::subscribeAirPressure(bool required)
 
 bool GZBridge::subscribeNavsat(bool required)
 {
-	std::string nav_sat_topic = "/world/" + _world_name + "/model/" + _model_name +
-				    "/link/base_link/sensor/navsat_sensor/navsat";
+	std::string nav_sat_topic = "/usv_1/sensors/gps/gps_sensor/data";
 
 	if (!_node.Subscribe(nav_sat_topic, &GZBridge::navSatCallback, this)) {
 		PX4_ERR("failed to subscribe to %s", nav_sat_topic.c_str());

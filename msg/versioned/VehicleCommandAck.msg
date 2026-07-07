@@ -7,7 +7,7 @@ uint32 MESSAGE_VERSION = 1
 
 uint64 timestamp # [us] time since system start
 
-uint8 ORB_QUEUE_LENGTH = 8
+uint8 ORB_QUEUE_LENGTH = 32
 
 uint32 command # [-] Command that is being acknowledged
 

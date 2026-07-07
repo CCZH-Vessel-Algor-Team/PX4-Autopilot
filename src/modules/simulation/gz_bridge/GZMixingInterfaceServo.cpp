@@ -105,11 +105,19 @@ GZMixingInterfaceServo::get_servo_angle_min(const size_t index)
 
 bool GZMixingInterfaceServo::init(const std::string &model_name)
 {
-	// /model/rascal_110_0/servo_2
+
 	for (int i = 0; i < 8; i++) {
-		std::string joint_name = "servo_" + std::to_string(i);
-		std::string servo_topic = "/model/" + model_name + "/" + joint_name;
-		//std::cout << "Servo topic: " << servo_topic << std::endl;
+		std::string servo_topic;
+
+		if (i == 0) {
+			servo_topic = "/usv_1/thrusters/left/thrust";
+		} else if (i == 1) {
+			servo_topic = "/usv_1/thrusters/right/thrust";
+		} else {
+			std::string joint_name = "servo_" + std::to_string(i);
+			servo_topic = "/usv_1/" + joint_name;
+		}
+
 		_servos_pub.push_back(_node.Advertise<gz::msgs::Double>(servo_topic));
 
 		if (!_servos_pub.back().Valid()) {
@@ -129,12 +137,10 @@ bool GZMixingInterfaceServo::init(const std::string &model_name)
 
 	return true;
 }
-
-bool GZMixingInterfaceServo::updateOutputs(float outputs[MAX_ACTUATORS], unsigned num_outputs, unsigned num_control_groups_updated)
+bool GZMixingInterfaceServo::updateOutputs(float outputs[MAX_ACTUATORS],
+		unsigned num_outputs, unsigned num_control_groups_updated)
 {
 	bool updated = false;
-	// cmd.command_value = (float)outputs[i] / 500.f - 1.f; // [-1, 1]
-
 	int i = 0;
 
 	for (auto &servo_pub : _servos_pub) {
@@ -142,10 +148,33 @@ bool GZMixingInterfaceServo::updateOutputs(float outputs[MAX_ACTUATORS], unsigne
 			gz::msgs::Double servo_output;
 
 			double output_range = (double)_mixing_output.maxValue(i) - (double)_mixing_output.minValue(i);
-			double output = _angle_min_rad[i] + _angular_range_rad[i] * ((double)outputs[i] - (double)_mixing_output.minValue(i)) / output_range;
-			// std::cout << "outputs[" << i << "]: " << outputs[i] << std::endl;
-			// std::cout << "  output: " << output << std::endl;
-			servo_output.set_data(output);
+
+			if (output_range <= 0.0) {
+				i++;
+				continue;
+			}
+
+			if (i == 0 || i == 1) {
+				static constexpr double kThrusterMaxCommand = 2350.0;
+
+				double normalized = 2.0 * ((double)outputs[i] - (double)_mixing_output.minValue(i))
+						/ output_range - 1.0;
+
+				if (normalized > 1.0) {
+					normalized = 1.0;
+
+				} else if (normalized < -1.0) {
+					normalized = -1.0;
+				}
+
+				servo_output.set_data(normalized * kThrusterMaxCommand);
+
+			} else {
+				double output = _angle_min_rad[i] + _angular_range_rad[i]
+						* ((double)outputs[i] - (double)_mixing_output.minValue(i)) / output_range;
+
+				servo_output.set_data(output);
+			}
 
 			if (servo_pub.Valid()) {
 				servo_pub.Publish(servo_output);

@@ -2471,10 +2471,8 @@ Mavlink::task_main(int argc, char *argv[])
 
 	_task_id = px4_getpid();
 
-	/* if the protocol is serial, we send the system version blindly */
-	if (get_protocol() == Protocol::SERIAL) {
-		send_autopilot_capabilities();
-	}
+	/* Send system version for all protocols (required by QGC for parameter sync) */
+	send_autopilot_capabilities();
 
 	_receiver.start();
 

@@ -7,3 +7,21 @@
 #
 
 . ${R}etc/init.d/rc.rover_differential_defaults
+
+
+#跳过IMU校准
+param set-default IMU_GYRO_CAL_EN=0
+#禁用空速计、光流、视觉里程计订阅
+param set-default SIM_GZ_EN_LIDAR=0
+param set-default SIM_GZ_EN_FLOW=0
+param set-default SIM_GZ_EN_ASPD=0
+param set-default SIM_GZ_EN_ODOM=0
+#跳过GPS检查
+param set-default COM_ARM_WO_GPS=0
+param set-default SYS_HAS_GPS=0
+#关闭日志
+param set-default SDLOG_BACKEND=0
+#跳过电源检查
+param set-default CBRK_SUPPLY_CHK=894281
+#禁用云台
+param set-default MNT_MODE_OUT=0

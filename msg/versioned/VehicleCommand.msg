@@ -220,7 +220,7 @@ uint8 ACTUATOR_TEST_GROUP_X_THRUST = 4
 uint8 ACTUATOR_TEST_GROUP_Y_THRUST = 5
 uint8 ACTUATOR_TEST_GROUP_Z_THRUST = 6
 
-uint8 ORB_QUEUE_LENGTH = 8
+uint8 ORB_QUEUE_LENGTH = 32
 
 float32 param1 # Parameter 1, as defined by MAVLink uint16 VEHICLE_CMD enum.
 float32 param2 # Parameter 2, as defined by MAVLink uint16 VEHICLE_CMD enum.
