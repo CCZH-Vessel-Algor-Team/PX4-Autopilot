@@ -47,13 +47,22 @@ param set-default PP_LOOKAHD_GAIN 1
 param set-default PP_LOOKAHD_MAX 10
 param set-default PP_LOOKAHD_MIN 1
 
-# Actuator mapping
-param set-default SIM_GZ_WH_FUNC1 101 # right wheel
-param set-default SIM_GZ_WH_MIN1 80
-param set-default SIM_GZ_WH_MAX1 120
-param set-default SIM_GZ_WH_DIS1 100
+# Actuator mapping for USV Gazebo (sydney / usv_1):
+# GZMixingInterfaceServo publishes:
+#   SIM_GZ_SV ch0 -> /usv_1/thrusters/left/thrust
+#   SIM_GZ_SV ch1 -> /usv_1/thrusters/right/thrust
+# Motor function IDs: 101=Motor1, 102=Motor2 (see output_functions.yaml).
+# Differential CA: Motor1=right, Motor2=left — match Servo channel order (left, right).
+param set-default SIM_GZ_SV_FUNC1 102 # left thruster  -> Motor2
+param set-default SIM_GZ_SV_MIN1 80
+param set-default SIM_GZ_SV_MAX1 120
+param set-default SIM_GZ_SV_DIS1 100
 
-param set-default SIM_GZ_WH_FUNC2 102 # left wheel
-param set-default SIM_GZ_WH_MIN2 80
-param set-default SIM_GZ_WH_MAX2 120
-param set-default SIM_GZ_WH_DIS2 100
+param set-default SIM_GZ_SV_FUNC2 101 # right thruster -> Motor1
+param set-default SIM_GZ_SV_MIN2 80
+param set-default SIM_GZ_SV_MAX2 120
+param set-default SIM_GZ_SV_DIS2 100
+
+# Disable stock wheel mix so PX4 does not drive rover_differential_0 motor_speed.
+param set-default SIM_GZ_WH_FUNC1 0
+param set-default SIM_GZ_WH_FUNC2 0
